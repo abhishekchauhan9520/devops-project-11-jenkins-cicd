@@ -1,0 +1,6 @@
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+jenkins_home/
