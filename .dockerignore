@@ -1,0 +1,7 @@
+.git
+.gitignore
+Jenkinsfile
+docker-compose.yml
+README.md
+tests
+.github
