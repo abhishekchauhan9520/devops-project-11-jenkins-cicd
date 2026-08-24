@@ -1,0 +1,25 @@
+name: Validate Project 11
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate project structure
+        run: bash ./tests/test_project11.sh
+      - name: Build Docker image
+        run: docker build -t project11-ci .
+      - name: Smoke test container
+        run: |
+          docker run -d --name project11-ci-container -p 18080:80 project11-ci
+          trap 'docker rm -f project11-ci-container >/dev/null 2>&1 || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:18080/ | grep -q 'Jenkins + Docker CI/CD'; then exit 0; fi
+            sleep 1
+          done
+          exit 1
